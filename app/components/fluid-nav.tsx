@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { BrandLogo } from "@/app/components/brand-logo";
 
 const whatsappUrl =
-  "https://wa.me/2349032243284?text=Hello%20MFS%2C%20I%20want%20to%20start%20my%20vehicle%20registration.";
+  "https://wa.me/2349060004617?text=Hello%20MFS%2C%20I%20want%20to%20start%20my%20vehicle%20registration.";
 
 const links = [
   { label: "Overview", href: "#main-content", current: true },

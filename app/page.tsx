@@ -23,7 +23,7 @@ import { HeroCarousel } from "@/app/components/hero-carousel";
 import { Reveal, TaglineReveal } from "@/app/components/reveal";
 
 const whatsappUrl =
-  "https://wa.me/2349032243284?text=Hello%20MFS%2C%20I%20want%20to%20start%20my%20vehicle%20registration.";
+  "https://wa.me/2349060004617?text=Hello%20MFS%2C%20I%20want%20to%20start%20my%20vehicle%20registration.";
 
 export const metadata: Metadata = {
   title: "Vehicle Registration and Renewal in Lagos | MFS Services",
@@ -204,7 +204,7 @@ export default function Home() {
     "@type": "LocalBusiness",
     name: "MFS Services",
     url: "https://mfsservicesng.com/",
-    telephone: "+2349060008491",
+    telephone: "+2349060004617",
     description:
       "Vehicle registration, licence renewal, insurance and vehicle documentation services in Lagos, Nigeria.",
     address: {
@@ -227,22 +227,22 @@ export default function Home() {
       <FluidNav />
 
       <main id="main-content" className="overflow-hidden bg-[#f7f3ea] text-[#181818]">
-        <section className="pb-24">
+        <section>
           <HeroCarousel />
 
           <Reveal>
-            <div className="bg-white px-4 py-2 lg:px-8">
-              <div className="mx-auto grid max-w-7xl gap-2 sm:grid-cols-3">
+            <div className="bg-white px-4 py-8 lg:px-8">
+              <div className="mx-auto grid max-w-7xl grid-cols-3 gap-4">
                 {[
                   ["2 days", "Standard new registration"],
                   ["2 weeks", "Advance renewal reminder"],
                   ["Lagos", "Pickup and delivery service"],
                 ].map(([value, label]) => (
-                  <div key={label} className="px-6 py-6 text-center sm:text-left">
-                    <p className="text-3xl font-semibold tracking-tight text-[#181818]">
+                  <div key={label} className="text-center">
+                    <p className="text-xl font-semibold tracking-tight text-[#181818] md:text-3xl">
                       {value}
                     </p>
-                    <p className="mt-1 text-sm font-semibold text-[#777b78]">
+                    <p className="mt-2 text-pretty text-xs font-semibold text-[#777b78] md:text-sm">
                       {label}
                     </p>
                   </div>
@@ -530,11 +530,11 @@ export default function Home() {
             <div>
               <p className="text-sm font-semibold text-white/40">Contact</p>
               <a
-                href="tel:+2349060008491"
+                href="tel:+2349060004617"
                 className="focus-ring link-motion mt-4 flex items-center gap-3 rounded-xl text-sm font-semibold text-white/85"
               >
                 <Phone aria-hidden="true" size={20} weight="duotone" />
-                0906 000 8491
+                0906 000 4617
               </a>
               <a
                 href={whatsappUrl}

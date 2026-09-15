@@ -51,11 +51,11 @@ export function LegalPage({ eyebrow, title, intro, children }: LegalPageProps) {
             <p className="mt-2 text-sm text-white/55">Speak with the MFS team.</p>
           </div>
           <a
-            href="tel:+2349060008491"
+            href="tel:+2349060004617"
             className="focus-ring button-motion inline-flex min-h-12 items-center gap-2 rounded-full bg-[#ff4f3d] px-3 py-2 text-base font-semibold text-white"
           >
             <Phone aria-hidden="true" size={20} weight="duotone" />
-            Call 0906 000 8491
+            Call 0906 000 4617
           </a>
         </footer>
       </div>
