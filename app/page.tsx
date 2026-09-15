@@ -19,6 +19,7 @@ import {
 } from "@phosphor-icons/react/ssr";
 import { FluidNav } from "@/app/components/fluid-nav";
 import { BrandLogo } from "@/app/components/brand-logo";
+import { HeroCarousel } from "@/app/components/hero-carousel";
 import { Reveal, TaglineReveal } from "@/app/components/reveal";
 
 const whatsappUrl =
@@ -187,92 +188,6 @@ function PrimaryCta({ inverse = false }: { inverse?: boolean }) {
   );
 }
 
-function HeroVisual() {
-  const timeline = [
-    ["Request received", "Complete"],
-    ["Documents verified", "Complete"],
-    ["Processing with agency", "Current"],
-    ["Ready for delivery", "Next"],
-  ];
-
-  return (
-    <aside
-      aria-label="Vehicle registration request preview"
-      className="relative mx-auto w-full max-w-xl pb-12 md:pb-16"
-    >
-      <div className="rounded-3xl bg-[#181818] p-2 shadow-[0_32px_80px_rgba(24,24,24,0.24)]">
-        <div className="overflow-hidden rounded-2xl bg-[#f7f3ea] p-6 md:p-8">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <p className="text-sm font-semibold text-[#777b78]">MFS request desk</p>
-              <p className="mt-1 text-lg font-semibold text-[#181818]">
-                Vehicle licence renewal
-              </p>
-            </div>
-            <span className="rounded-full bg-[#dff5e8] px-3 py-2 text-xs font-semibold text-[#17663b]">
-              In progress
-            </span>
-          </div>
-
-          <div className="my-8 flex items-center justify-center bg-white p-8">
-            <div className="flex h-24 w-24 items-center justify-center rounded-full bg-[#fff0ed] text-[#ff4f3d]">
-              <CarProfile aria-hidden="true" size={60} weight="duotone" />
-            </div>
-          </div>
-
-          <div className="space-y-6">
-            {timeline.map(([label, status], index) => (
-              <div key={label} className="flex items-center gap-3">
-                <span
-                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                    index < 2
-                      ? "bg-[#181818] text-white"
-                      : index === 2
-                        ? "bg-[#ff4f3d] text-white"
-                        : "border border-black/10 bg-white text-[#777b78]"
-                  }`}
-                >
-                  {index < 2 ? (
-                    <CheckCircle aria-hidden="true" size={16} weight="fill" />
-                  ) : (
-                    index + 1
-                  )}
-                </span>
-                <span className="flex-1 text-sm font-semibold text-[#303532]">
-                  {label}
-                </span>
-                <span className="text-xs font-semibold text-[#8b8f8c]">{status}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="absolute -left-4 bottom-0 rounded-2xl border border-black/10 bg-white p-4 shadow-[0_24px_48px_rgba(24,24,24,0.14)] sm:left-8">
-        <div className="flex items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#fff0ed] text-[#ff4f3d]">
-            <Certificate aria-hidden="true" size={24} weight="duotone" />
-          </span>
-          <div>
-            <p className="text-xs font-semibold text-[#898d89]">Authorization</p>
-            <p className="text-sm font-semibold text-[#181818]">Lagos State MVAA</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="absolute -right-2 bottom-4 rounded-2xl bg-[#ff4f3d] p-4 text-white shadow-[0_24px_48px_rgba(255,79,61,0.28)] sm:right-6">
-        <div className="flex items-center gap-3">
-          <BellRinging aria-hidden="true" size={24} weight="duotone" />
-          <div>
-            <p className="text-xs font-semibold text-white/70">Renewal reminder</p>
-            <p className="text-sm font-semibold">Two weeks early</p>
-          </div>
-        </div>
-      </div>
-    </aside>
-  );
-}
-
 export default function Home() {
   const faqSchema = {
     "@context": "https://schema.org",
@@ -312,54 +227,27 @@ export default function Home() {
       <FluidNav />
 
       <main id="main-content" className="overflow-hidden bg-[#f7f3ea] text-[#181818]">
-        <section className="px-4 pb-24 pt-24 lg:px-8">
-          <div className="mx-auto grid max-w-7xl items-center gap-16 lg:grid-cols-[1.05fr_0.95fr]">
-            <Reveal>
-              <div className="max-w-[680px]">
-                <h1 className="hero-heading text-balance text-5xl font-semibold tracking-tight md:text-6xl lg:text-7xl">
-                  Get genuine vehicle documents
-                  <br />
-                  without the runaround.
-                </h1>
-                <p className="mt-6 max-w-[680px] text-pretty text-lg text-[#5d625f] md:text-xl">
-                  From new registration and licence renewals to insurance,
-                  roadworthiness and permits, MFS handles the process for Lagos
-                  vehicle owners and fleets.
-                </p>
-                <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-                  <PrimaryCta />
-                  <p className="flex max-w-sm items-center gap-2 text-sm font-semibold text-[#555a57]">
-                    <ShieldCheck
-                      aria-hidden="true"
-                      size={20}
-                      weight="duotone"
-                      className="shrink-0 text-[#ff4f3d]"
-                    />
-                    Authorized by Lagos State MVAA and licensed through AutoReg
-                  </p>
-                </div>
+        <section className="pb-24">
+          <HeroCarousel />
+
+          <Reveal>
+            <div className="bg-white px-4 py-2 lg:px-8">
+              <div className="mx-auto grid max-w-7xl gap-2 sm:grid-cols-3">
+                {[
+                  ["2 days", "Standard new registration"],
+                  ["2 weeks", "Advance renewal reminder"],
+                  ["Lagos", "Pickup and delivery service"],
+                ].map(([value, label]) => (
+                  <div key={label} className="px-6 py-6 text-center sm:text-left">
+                    <p className="text-3xl font-semibold tracking-tight text-[#181818]">
+                      {value}
+                    </p>
+                    <p className="mt-1 text-sm font-semibold text-[#777b78]">
+                      {label}
+                    </p>
+                  </div>
+                ))}
               </div>
-            </Reveal>
-
-            <Reveal delay={140}>
-              <HeroVisual />
-            </Reveal>
-          </div>
-
-          <Reveal className="mx-auto mt-20 max-w-7xl" delay={220}>
-            <div className="grid gap-2 rounded-3xl bg-white p-2 sm:grid-cols-3">
-              {[
-                ["2 days", "Standard new registration"],
-                ["2 weeks", "Advance renewal reminder"],
-                ["Lagos", "Pickup and delivery service"],
-              ].map(([value, label]) => (
-                <div key={label} className="px-6 py-6 text-center sm:text-left">
-                  <p className="text-3xl font-semibold tracking-tight text-[#181818]">
-                    {value}
-                  </p>
-                  <p className="mt-1 text-sm font-semibold text-[#777b78]">{label}</p>
-                </div>
-              ))}
             </div>
           </Reveal>
         </section>
