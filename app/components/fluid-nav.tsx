@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowUpRight, WhatsappLogo } from "@phosphor-icons/react";
+import { ArrowUpRight, CaretDown, WhatsappLogo } from "@phosphor-icons/react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BrandLogo } from "@/app/components/brand-logo";
 
@@ -8,15 +9,19 @@ const whatsappUrl =
   "https://wa.me/2349060004617?text=Hello%20MFS%2C%20I%20want%20to%20start%20my%20vehicle%20registration.";
 
 const links = [
-  { label: "Overview", href: "#main-content", current: true },
-  { label: "Services", href: "#services" },
-  { label: "How it works", href: "#process" },
-  { label: "Reviews", href: "#proof" },
-  { label: "FAQs", href: "#faq" },
+  { label: "Services", href: "/#services" },
+  { label: "How it works", href: "/#process" },
+  { label: "About us", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ];
 
-export function FluidNav() {
+type FluidNavProps = {
+  currentPage?: "home" | "about" | "contact";
+};
+
+export function FluidNav({ currentPage = "home" }: FluidNavProps) {
   const [open, setOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -28,6 +33,7 @@ export function FluidNav() {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setOpen(false);
+        setAccountOpen(false);
       }
     };
 
@@ -44,36 +50,97 @@ export function FluidNav() {
       <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
         <nav
           aria-label="Primary navigation"
-          className="pointer-events-auto mx-auto mt-6 flex w-[calc(100%_-_32px)] items-center justify-between gap-8 rounded-full border border-black/10 bg-white/85 px-3 py-2 shadow-[0_16px_48px_rgba(24,24,24,0.12)] backdrop-blur-xl md:w-max"
+          className="pointer-events-auto mx-auto mt-6 flex w-[calc(100%_-_32px)] items-center justify-between gap-6 rounded-full border border-black/10 bg-white/85 px-3 py-2 shadow-[0_16px_48px_rgba(24,24,24,0.12)] backdrop-blur-xl lg:w-max"
         >
-          <a
-            href="#main-content"
+          <Link
+            href="/"
             aria-label="MFS Services home"
-            aria-current="page"
+            aria-current={currentPage === "home" ? "page" : undefined}
             className="focus-ring flex rounded-full"
             onClick={() => setOpen(false)}
           >
             <BrandLogo className="h-10 w-auto" preload />
-          </a>
+          </Link>
 
-          <div className="hidden items-center gap-6 md:flex">
+          <div className="hidden items-center gap-2 lg:flex">
             {links.map((link) => (
-              <a
+              <Link
                 key={link.href}
                 href={link.href}
-                aria-current={link.current ? "page" : undefined}
-                className="focus-ring nav-link rounded-full text-sm font-semibold text-[#5d625f]"
+                aria-current={link.href === `/${currentPage}` ? "page" : undefined}
+                className={`focus-ring nav-link rounded-full px-3 py-2 text-sm font-semibold ${
+                  link.href === `/${currentPage}`
+                    ? "bg-[#fff0eb] text-[#9b281e]"
+                    : "text-[#5d625f] hover:bg-[#f7f3ea] hover:text-[#181818]"
+                }`}
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
+
+            <div
+              className="relative"
+              onMouseEnter={() => setAccountOpen(true)}
+              onMouseLeave={() => setAccountOpen(false)}
+              onFocus={() => setAccountOpen(true)}
+              onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget)) {
+                  setAccountOpen(false);
+                }
+              }}
+            >
+              <button
+                type="button"
+                aria-expanded={accountOpen}
+                aria-controls="account-navigation"
+                onClick={() => setAccountOpen(true)}
+                className="focus-ring button-motion inline-flex min-h-10 items-center gap-1 rounded-full bg-[#181818] px-3 py-2 text-sm font-semibold text-white hover:bg-[#313131]"
+              >
+                Sign in
+                <CaretDown
+                  aria-hidden="true"
+                  size={14}
+                  weight="bold"
+                  className={`transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${accountOpen ? "rotate-180" : ""}`}
+                />
+              </button>
+
+              <div
+                id="account-navigation"
+                aria-hidden={!accountOpen}
+                className={`absolute left-1/2 top-full z-50 w-44 -translate-x-1/2 pt-2 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+                  accountOpen
+                    ? "visible pointer-events-auto translate-y-0 opacity-100"
+                    : "invisible pointer-events-none -translate-y-2 opacity-0"
+                }`}
+              >
+                <div className="rounded-2xl border border-black/10 bg-white p-2 shadow-[0_16px_48px_rgba(24,24,24,0.12)]">
+                  <Link
+                    href="/auth/login"
+                    tabIndex={accountOpen ? 0 : -1}
+                    onClick={() => setAccountOpen(false)}
+                    className="focus-ring block rounded-lg px-3 py-2 text-sm font-semibold text-[#181818] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-[#f7f3ea] active:scale-[0.98]"
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    href="/auth/signup"
+                    tabIndex={accountOpen ? 0 : -1}
+                    onClick={() => setAccountOpen(false)}
+                    className="focus-ring block rounded-lg px-3 py-2 text-sm font-semibold text-[#181818] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-[#f7f3ea] active:scale-[0.98]"
+                  >
+                    Sign up
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
 
           <a
             href={whatsappUrl}
             target="_blank"
             rel="noreferrer"
-            className="focus-ring hidden min-h-10 items-center gap-2 rounded-full bg-[#181818] px-3 py-2 text-sm font-semibold text-white md:flex"
+            className="focus-ring button-motion hidden min-h-10 items-center gap-2 rounded-full bg-[#ff4f3d] px-3 py-2 text-sm font-semibold text-white hover:bg-[#e94132] lg:flex"
           >
             Start on WhatsApp
             <ArrowUpRight aria-hidden="true" size={16} weight="bold" />
@@ -85,7 +152,7 @@ export function FluidNav() {
             aria-controls="mobile-navigation"
             aria-label={open ? "Close navigation" : "Open navigation"}
             onClick={() => setOpen((current) => !current)}
-            className="focus-ring relative h-10 w-10 rounded-full bg-[#181818] md:hidden"
+            className="focus-ring relative h-10 w-10 rounded-full bg-[#181818] lg:hidden"
           >
             <span
               className={`absolute left-3 h-0.5 w-4 bg-white transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
@@ -108,7 +175,7 @@ export function FluidNav() {
       <div
         id="mobile-navigation"
         aria-hidden={!open}
-        className={`fixed inset-0 z-40 flex items-end bg-[#181818]/95 p-6 pb-16 backdrop-blur-3xl transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] md:hidden ${
+        className={`fixed inset-0 z-40 flex items-end overflow-y-auto bg-[#181818]/95 p-6 pb-16 backdrop-blur-3xl transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] lg:hidden ${
           open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
         }`}
       >
@@ -116,20 +183,43 @@ export function FluidNav() {
           <p className="mb-6 text-sm font-semibold text-white/50">Explore MFS</p>
           <div className="flex flex-col gap-2">
             {links.map((link, index) => (
-              <a
+              <Link
                 key={link.href}
                 href={link.href}
                 tabIndex={open ? 0 : -1}
-                aria-current={link.current ? "page" : undefined}
+                aria-current={link.href === `/${currentPage}` ? "page" : undefined}
                 onClick={() => setOpen(false)}
                 style={{ transitionDelay: open ? `${100 + index * 50}ms` : "0ms" }}
-                className={`focus-ring rounded-xl py-2 text-4xl font-semibold text-white transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+                className={`focus-ring rounded-xl py-2 text-4xl font-semibold transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
                   open ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
+                } ${
+                  link.href === `/${currentPage}` ? "text-[#ff7466]" : "text-white"
                 }`}
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
+          </div>
+          <div className="mt-6 rounded-2xl bg-white/10 p-4">
+            <p className="mb-2 text-sm font-semibold text-white/60">Sign in</p>
+            <div className="flex gap-6">
+              <Link
+                href="/auth/login"
+                tabIndex={open ? 0 : -1}
+                onClick={() => setOpen(false)}
+                className="focus-ring rounded-lg py-2 text-lg font-semibold text-white transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:text-[#ff7466] active:scale-[0.98]"
+              >
+                Log in
+              </Link>
+              <Link
+                href="/auth/signup"
+                tabIndex={open ? 0 : -1}
+                onClick={() => setOpen(false)}
+                className="focus-ring rounded-lg py-2 text-lg font-semibold text-white transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:text-[#ff7466] active:scale-[0.98]"
+              >
+                Sign up
+              </Link>
+            </div>
           </div>
           <a
             href={whatsappUrl}

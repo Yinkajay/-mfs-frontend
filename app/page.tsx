@@ -40,8 +40,8 @@ const benefits = [
   },
   {
     icon: ClockCountdown,
-    title: "Registration in two days",
-    copy: "New vehicle registration takes two days, with a special weekend service available when timing is tight.",
+    title: "New registration in 24 hours",
+    copy: "We complete standard new vehicle registrations within 24 hours of payment. Weekend service is available when timing is tight.",
   },
   {
     icon: Package,
@@ -130,7 +130,7 @@ const faqs = [
   {
     question: "How long does new vehicle registration take?",
     answer:
-      "The standard timeline stated by MFS is two days. Timing for other documents depends on the specific request and supporting information.",
+      "For standard new registration, allow up to 24 hours after payment. Timelines for other documents vary by request.",
   },
   {
     question: "What do I need for a new vehicle registration?",
@@ -234,7 +234,7 @@ export default function Home() {
             <div className="bg-white px-4 py-8 lg:px-8">
               <div className="mx-auto grid max-w-7xl grid-cols-3 gap-4">
                 {[
-                  ["2 days", "Standard new registration"],
+                  ["24 hours", "From payment to registration"],
                   ["2 weeks", "Advance renewal reminder"],
                   ["Lagos", "Pickup and delivery service"],
                 ].map(([value, label]) => (

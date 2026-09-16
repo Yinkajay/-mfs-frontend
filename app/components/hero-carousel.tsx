@@ -120,7 +120,7 @@ export function HeroCarousel() {
             without the runaround.
           </h1>
           <p className="mt-6 max-w-[680px] text-pretty text-lg text-white/80 md:text-xl">
-            MFS handles registrations, renewals, insurance and permits, with
+            MFS handles vehicle registrations, renewals, insurance and permits, with
             pickup and delivery for Lagos vehicle owners and fleets.
           </p>
           <a
