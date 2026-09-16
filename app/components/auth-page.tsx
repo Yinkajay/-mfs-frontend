@@ -34,10 +34,7 @@ export function AuthPage({ mode }: AuthPageProps) {
 
         <div className="flex flex-1 items-center justify-center py-16">
           <div className="w-full max-w-md">
-              <p className="text-sm font-semibold text-[#e94132]">
-                {isLogin ? "Welcome back" : "Welcome to MFS"}
-              </p>
-              <h1 className="mt-3 text-balance text-3xl font-semibold tracking-tight md:text-4xl">
+              <h1 className="text-balance text-3xl font-semibold tracking-tight md:text-4xl">
                 {isLogin ? "Log in to your account." : "Create your account."}
               </h1>
               <p className="mt-3 text-pretty text-sm text-[#686d69]">

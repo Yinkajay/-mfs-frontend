@@ -572,7 +572,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="mt-16 flex flex-col gap-4 border border-white/10 p-4 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-16 flex flex-col gap-4 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between">
             <p>© 2026 MFS Services. All rights reserved.</p>
             <div className="flex gap-6">
               <a href="/privacy" className="focus-ring link-motion rounded-lg">

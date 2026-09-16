@@ -88,6 +88,11 @@ export function HeroCarousel() {
         }
       }}
     >
+      <span
+        id="home-nav-sentinel"
+        aria-hidden="true"
+        className="pointer-events-none absolute left-0 top-24 h-px w-px"
+      />
       {previous !== null ? (
         <Image
           src={slides[previous].src}
@@ -115,9 +120,9 @@ export function HeroCarousel() {
       <div className="relative z-10 mx-auto flex min-h-[720px] max-w-7xl items-end px-6 pb-24 pt-40 md:min-h-[760px] md:px-12 md:pb-16 lg:min-h-[800px] lg:px-16">
         <div className="hero-copy-enter max-w-[680px]">
           <h1 className="photo-hero-heading text-balance text-5xl font-semibold tracking-tight md:text-6xl lg:text-7xl">
-            Vehicle documents
+            Vehicle paperwork,
             <br />
-            without the runaround.
+            made painless.
           </h1>
           <p className="mt-6 max-w-[680px] text-pretty text-lg text-white/80 md:text-xl">
             MFS handles vehicle registrations, renewals, insurance and permits, with

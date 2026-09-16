@@ -22,6 +22,21 @@ type FluidNavProps = {
 export function FluidNav({ currentPage = "home" }: FluidNavProps) {
   const [open, setOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    if (currentPage !== "home") return;
+
+    const sentinel = document.getElementById("home-nav-sentinel");
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setScrolled(!entry.isIntersecting);
+    });
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [currentPage]);
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -45,12 +60,18 @@ export function FluidNav({ currentPage = "home" }: FluidNavProps) {
     };
   }, [open]);
 
+  const overHero = currentPage === "home" && !scrolled;
+
   return (
     <>
       <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
         <nav
           aria-label="Primary navigation"
-          className="pointer-events-auto mx-auto mt-6 flex w-[calc(100%_-_32px)] items-center justify-between gap-6 rounded-full border border-black/10 bg-white/85 px-3 py-2 shadow-[0_16px_48px_rgba(24,24,24,0.12)] backdrop-blur-xl lg:w-max"
+          className={`pointer-events-auto mx-auto flex items-center justify-between gap-6 border transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+            overHero
+              ? "mt-0 w-full max-w-7xl rounded-none border-transparent bg-transparent px-6 py-6 shadow-none backdrop-blur-none sm:px-12 xl:px-16"
+              : "mt-6 w-[calc(100%_-_32px)] max-w-5xl rounded-full border-black/10 bg-white/85 px-3 py-2 shadow-[0_16px_48px_rgba(24,24,24,0.12)] backdrop-blur-xl"
+          }`}
         >
           <Link
             href="/"
@@ -59,7 +80,10 @@ export function FluidNav({ currentPage = "home" }: FluidNavProps) {
             className="focus-ring flex rounded-full"
             onClick={() => setOpen(false)}
           >
-            <BrandLogo className="h-10 w-auto" preload />
+            <BrandLogo
+              className={`h-10 w-auto transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${overHero ? "brightness-0 invert" : ""}`}
+              preload
+            />
           </Link>
 
           <div className="hidden items-center gap-2 lg:flex">
@@ -68,10 +92,12 @@ export function FluidNav({ currentPage = "home" }: FluidNavProps) {
                 key={link.href}
                 href={link.href}
                 aria-current={link.href === `/${currentPage}` ? "page" : undefined}
-                className={`focus-ring nav-link rounded-full px-3 py-2 text-sm font-semibold ${
+                className={`focus-ring rounded-full px-3 py-2 text-sm font-semibold transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${overHero ? "" : "nav-link"} ${
                   link.href === `/${currentPage}`
                     ? "bg-[#fff0eb] text-[#9b281e]"
-                    : "text-[#5d625f] hover:bg-[#f7f3ea] hover:text-[#181818]"
+                    : overHero
+                      ? "text-white/90 hover:bg-white/10 hover:text-white"
+                      : "text-[#5d625f] hover:bg-[#f7f3ea] hover:text-[#181818]"
                 }`}
               >
                 {link.label}
@@ -94,7 +120,11 @@ export function FluidNav({ currentPage = "home" }: FluidNavProps) {
                 aria-expanded={accountOpen}
                 aria-controls="account-navigation"
                 onClick={() => setAccountOpen(true)}
-                className="focus-ring button-motion inline-flex min-h-10 items-center gap-1 rounded-full bg-[#181818] px-3 py-2 text-sm font-semibold text-white hover:bg-[#313131]"
+                className={`focus-ring button-motion inline-flex min-h-10 items-center gap-1 rounded-full border px-3 py-2 text-sm font-semibold transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+                  overHero
+                    ? "border-white/60 bg-white/10 text-white hover:bg-white/20"
+                    : "border-transparent bg-[#181818] text-white hover:bg-[#313131]"
+                }`}
               >
                 Sign in
                 <CaretDown
@@ -140,7 +170,11 @@ export function FluidNav({ currentPage = "home" }: FluidNavProps) {
             href={whatsappUrl}
             target="_blank"
             rel="noreferrer"
-            className="focus-ring button-motion hidden min-h-10 items-center gap-2 rounded-full bg-[#ff4f3d] px-3 py-2 text-sm font-semibold text-white hover:bg-[#e94132] lg:flex"
+            className={`focus-ring button-motion hidden min-h-10 items-center gap-2 rounded-full border px-3 py-2 text-sm font-semibold transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] lg:flex ${
+              overHero
+                ? "border-white bg-white text-[#181818] hover:bg-white/90"
+                : "border-transparent bg-[#ff4f3d] text-white hover:bg-[#e94132]"
+            }`}
           >
             Start on WhatsApp
             <ArrowUpRight aria-hidden="true" size={16} weight="bold" />
@@ -152,7 +186,11 @@ export function FluidNav({ currentPage = "home" }: FluidNavProps) {
             aria-controls="mobile-navigation"
             aria-label={open ? "Close navigation" : "Open navigation"}
             onClick={() => setOpen((current) => !current)}
-            className="focus-ring relative h-10 w-10 rounded-full bg-[#181818] lg:hidden"
+            className={`focus-ring relative h-10 w-10 rounded-full border transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] lg:hidden ${
+              overHero
+                ? "border-white/60 bg-white/10"
+                : "border-transparent bg-[#181818]"
+            }`}
           >
             <span
               className={`absolute left-3 h-0.5 w-4 bg-white transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
