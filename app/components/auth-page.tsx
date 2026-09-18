@@ -32,7 +32,7 @@ export function AuthPage({ mode }: AuthPageProps) {
           </Link>
         </nav>
 
-        <div className="flex flex-1 items-center justify-center py-16">
+        <div className="flex flex-1 items-center justify-center py-8 sm:py-16">
           <div className="w-full max-w-md">
               <h1 className="text-balance text-3xl font-semibold tracking-tight md:text-4xl">
                 {isLogin ? "Log in to your account." : "Create your account."}
@@ -167,13 +167,12 @@ export function AuthPage({ mode }: AuthPageProps) {
         </div>
       </section>
 
-      <aside className="relative min-h-80 bg-[#181818] text-white lg:min-h-dvh">
+      <aside className="relative hidden bg-[#181818] text-white lg:block lg:min-h-dvh">
         <Image
           src="/lexus.webp"
           alt=""
           fill
-          sizes="(max-width: 1024px) 100vw, 50vw"
-          preload
+          sizes="50vw"
           className="object-cover object-[68%_center]"
         />
         <div aria-hidden="true" className="absolute inset-0 bg-black/60" />

@@ -29,6 +29,46 @@ const slides = [
   },
 ];
 
+type Slide = (typeof slides)[number];
+
+function SlideImage({
+  slide,
+  entering = false,
+  preload = false,
+}: {
+  slide: Slide;
+  entering?: boolean;
+  preload?: boolean;
+}) {
+  const isFamily = slide.src === "/family.webp";
+
+  return (
+    <div className={`absolute inset-0 ${entering ? "hero-slide-enter" : ""}`}>
+      <Image
+        src={slide.src}
+        alt=""
+        fill
+        sizes="100vw"
+        preload={preload}
+        className={`object-cover ${slide.position} ${isFamily ? "max-md:scale-110 max-md:blur-2xl" : ""}`}
+        draggable={false}
+      />
+      {isFamily && (
+        <div className="absolute -inset-x-10 top-24 h-[45%] md:hidden">
+          <Image
+            src={slide.src}
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-contain object-top"
+            draggable={false}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function HeroCarousel() {
   const [current, setCurrent] = useState(0);
   const [previous, setPrevious] = useState<number | null>(null);
@@ -93,27 +133,8 @@ export function HeroCarousel() {
         aria-hidden="true"
         className="pointer-events-none absolute left-0 top-24 h-px w-px"
       />
-      {previous !== null ? (
-        <Image
-          src={slides[previous].src}
-          alt=""
-          fill
-          sizes="100vw"
-          className={`object-cover ${slides[previous].position}`}
-          draggable={false}
-        />
-      ) : null}
-
-      <Image
-        key={activeSlide.src}
-        src={activeSlide.src}
-        alt=""
-        fill
-        sizes="100vw"
-        preload={current === 0}
-        className={`hero-slide-enter object-cover ${activeSlide.position}`}
-        draggable={false}
-      />
+      {previous !== null && <SlideImage slide={slides[previous]} />}
+      <SlideImage key={activeSlide.src} slide={activeSlide} entering preload={current === 0} />
 
       <div aria-hidden="true" className="absolute inset-0 bg-black/50" />
 
