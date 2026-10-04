@@ -48,4 +48,30 @@ Before browser tests, build with `NEXT_PUBLIC_API_BASE_URL=http://localhost:3003
 
 For the opt-in real-backend check, use Node 24, keep ports 3002/3003 free, ensure `../backend` has its existing generated build and authenticated Neon development link, then set `MFS_AUTH_LIVE=1` and run `npm run test:auth:live`. It verifies the pinned development target before creating one synthetic customer, and removes only that fixture and its exact rate-limit counters afterward. It does not migrate or deploy anything.
 
-Verification delivery, password recovery, staff authentication, and a dashboard are not part of this integration.
+Verification delivery, password recovery, and staff authentication are not part of this integration.
+
+## Customer workspace
+
+The customer pages share a full width shell with a desktop navigation rail and a keyboard accessible mobile dialog. Open **Dashboard** from the signed-in Account menu. The existing landing/auth designs and their post-login destination are unchanged.
+
+| Route | Content |
+| --- | --- |
+| `/dashboard/` | Overview with a real account summary, workspace links, and the existing MFS WhatsApp contact as the next useful action. |
+| `/dashboard/vehicles/` | Informational empty layout; no vehicle records or vehicle API calls. |
+| `/dashboard/services/` | Informational empty layout; no hard-coded catalogue, availability, prices, or checkout. |
+| `/dashboard/requests/` | Informational empty layout; no request records, progress, or submission actions. |
+| `/dashboard/account/` | Read-only name, email, and phone from the existing authenticated `GET /v1/me` response. |
+
+The existing `AuthProvider` remains the only session store. Initial checks show a skeleton; a confirmed signed-out session redirects to `/auth/login/`. An initial connection failure offers retry without treating it as a logout. A failed background refresh keeps the last loaded profile with a visible notice, while a confirmed `401` removes it. Logout uses the existing credentialed, CSRF-protected API flow. No credentials or profile data are added to browser storage, and no verification requirement is introduced.
+
+These statically exported pages use a **client-side UI gate**, not server-side page access control. Only generic shell content is exported; account details arrive from the already protected customer API. Future vehicle/request/file APIs must enforce customer authorization and ownership on every request. Do not put private records into static pages or treat this shell as an authorization boundary.
+
+Dashboard metadata uses `noindex, nofollow`. Account editing, staff pages, and all domain API integrations remain out of scope.
+
+After building with the documented test API URL, run:
+
+```sh
+npx playwright test tests/auth.spec.ts tests/dashboard.spec.ts
+```
+
+The dashboard browser tests mock only `/v1/me` and logout. They cover all routes, real profile projection, session failures, logout retries, keyboard navigation, mobile focus trapping, and narrow viewport overflow. They do not connect to the backend or create database fixtures.

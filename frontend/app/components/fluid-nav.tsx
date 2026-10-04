@@ -156,6 +156,14 @@ export function FluidNav({ currentPage = "home" }: FluidNavProps) {
                       <p className="truncate px-3 py-2 text-sm font-semibold text-[#686d69]">
                         {auth.user.firstName}
                       </p>
+                      <Link
+                        href="/dashboard"
+                        tabIndex={accountOpen ? 0 : -1}
+                        onClick={() => setAccountOpen(false)}
+                        className="focus-ring block rounded-lg px-3 py-2 text-sm font-semibold text-[#181818] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-[#f7f3ea] active:scale-[0.98]"
+                      >
+                        Dashboard
+                      </Link>
                       <button
                         type="button"
                         tabIndex={accountOpen ? 0 : -1}
@@ -304,15 +312,25 @@ export function FluidNav({ currentPage = "home" }: FluidNavProps) {
             </p>
             <div className="flex gap-6">
               {auth.user ? (
-                <button
-                  type="button"
-                  tabIndex={open ? 0 : -1}
-                  disabled={auth.busy !== null}
-                  onClick={() => void auth.logout()}
-                  className="focus-ring button-motion rounded-lg py-2 text-lg font-semibold text-white hover:text-[#ff7466] disabled:cursor-wait"
-                >
-                  {auth.busy === "logout" ? "Logging out…" : "Log out"}
-                </button>
+                <>
+                  <Link
+                    href="/dashboard"
+                    tabIndex={open ? 0 : -1}
+                    onClick={() => setOpen(false)}
+                    className="focus-ring rounded-lg py-2 text-lg font-semibold text-white transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:text-[#ff7466] active:scale-[0.98]"
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    type="button"
+                    tabIndex={open ? 0 : -1}
+                    disabled={auth.busy !== null}
+                    onClick={() => void auth.logout()}
+                    className="focus-ring button-motion rounded-lg py-2 text-lg font-semibold text-white hover:text-[#ff7466] disabled:cursor-wait"
+                  >
+                    {auth.busy === "logout" ? "Logging out…" : "Log out"}
+                  </button>
+                </>
               ) : auth.phase === "checking" ? (
                 <p role="status" className="py-2 text-sm text-white/60">
                   Checking session…
