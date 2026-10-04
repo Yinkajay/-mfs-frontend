@@ -1,0 +1,6 @@
+{
+  "host": "your-cpanel-ftp-hostname",
+  "port": 21,
+  "user": "your-ftp-username",
+  "remoteDir": "/public_html"
+}

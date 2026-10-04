@@ -1,0 +1,5 @@
+# Local settings are never shipped; the public configuration template is safe.
+.env*
+!.env.example
+/test-results/
+/playwright-report/
