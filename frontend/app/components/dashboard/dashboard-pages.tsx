@@ -192,29 +192,6 @@ export function DashboardOverview() {
 // Informational content only. A future API response must drive real lists,
 // service availability, prices, requirements and request progress.
 const emptyPages = {
-  vehicles: {
-    title: "Vehicles",
-    description: "Keep your vehicle details close at hand.",
-    icon: CarProfile,
-    heading: "Your garage will live here.",
-    copy: "Vehicle management is coming soon. For now, MFS can help with registration, renewals, and your vehicle details.",
-    action: "Chat with MFS",
-    detailsHeading: "What this space will bring together",
-    details: [
-      {
-        title: "Vehicle details",
-        copy: "A place for your vehicle’s make, model, and registration details.",
-      },
-      {
-        title: "Vehicle documents",
-        copy: "Keep the paperwork associated with each vehicle together.",
-      },
-      {
-        title: "Reusable information",
-        copy: "Use saved vehicle details for future service requests.",
-      },
-    ],
-  },
   services: {
     title: "Services",
     description: "Find the right support for your vehicle paperwork.",

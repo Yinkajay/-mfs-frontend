@@ -24,7 +24,7 @@ const fieldMessages: Record<keyof RegisterInput, string> = {
   firstName: "Enter a valid first name, up to 80 characters.",
   lastName: "Enter a valid last name, up to 80 characters.",
   email: "Enter a valid email address.",
-  phone: "Enter a valid phone number without an extension.",
+  phone: "Enter a phone number with the correct number of digits.",
   password: "Check your password length and try again.",
 };
 
@@ -101,21 +101,33 @@ function customerFromResponse(value: unknown): Customer {
   };
 }
 
-export function createAuthApi(
+// Shared transport: authentication and garage requests use the same cookie,
+// CSRF, URL, timeout and redirect policy. Response handling stays domain specific.
+export function createApiRequest(
   baseUrl: () => string | undefined,
   fetcher: typeof fetch = (...args) => fetch(...args),
 ) {
-  async function request(path: string, body?: object, signal?: AbortSignal) {
-    let response: Response;
+  return async function fetchResponse(
+    path: string,
+    {
+      method = "GET",
+      body,
+      signal,
+    }: {
+      method?: "GET" | "POST" | "PATCH";
+      body?: object;
+      signal?: AbortSignal;
+    } = {},
+  ): Promise<Response> {
     try {
-      response = await fetcher(`${resolveApiBaseUrl(baseUrl())}${path}`, {
-        method: body === undefined ? "GET" : "POST",
+      return await fetcher(`${resolveApiBaseUrl(baseUrl())}${path}`, {
+        method,
         credentials: "include",
         cache: "no-store",
         // Do not forward passwords to redirects or downgrade destinations.
         redirect: "error",
         headers:
-          body === undefined
+          method === "GET"
             ? { Accept: "application/json" }
             : {
                 Accept: "application/json",
@@ -131,6 +143,20 @@ export function createAuthApi(
       if (signal?.aborted) throw error;
       throw new AuthApiError("Could not connect. Please try again.");
     }
+  };
+}
+
+export function createAuthApi(
+  baseUrl: () => string | undefined,
+  fetcher: typeof fetch = (...args) => fetch(...args),
+) {
+  const fetchResponse = createApiRequest(baseUrl, fetcher);
+  async function request(path: string, body?: object, signal?: AbortSignal) {
+    const response = await fetchResponse(path, {
+      method: body === undefined ? "GET" : "POST",
+      body,
+      signal,
+    });
 
     if (!response.ok) {
       const fields: FieldErrors = {};

@@ -17,8 +17,8 @@ export function validateAuthInput(
     new TextEncoder().encode(input.password).length > 1024
   ) {
     errors.password = "Use no more than 128 characters.";
-  } else if (mode === "signup" && length < 15) {
-    errors.password = "Use at least 15 characters.";
+  } else if (mode === "signup" && length < 8) {
+    errors.password = "Use at least 8 characters.";
   }
   if (mode === "signup") {
     const registration = input as RegisterInput;
@@ -30,13 +30,13 @@ export function validateAuthInput(
       }
     }
     const phone = registration.phone.trim();
-    // Full country-specific validity and E.164 normalization remain server-side.
+    // Phone length checks and E.164 normalization remain server-side.
     if (
       phone.length < 5 ||
       phone.length > 40 ||
       !/^\+?[\d\s().-]+$/.test(phone)
     ) {
-      errors.phone = "Enter a valid phone number without an extension.";
+      errors.phone = "Enter a phone number with the correct number of digits.";
     }
     if (!agreed) errors.agree = "Please agree to the terms and privacy policy.";
   }

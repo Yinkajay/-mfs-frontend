@@ -9,6 +9,7 @@
     "deploy:check": "node scripts/deploy-ftps.mjs --check",
     "test:deploy": "node --test scripts/deploy-ftps.test.mjs",
     "test:auth": "node --test scripts/auth.test.mjs",
+    "test:vehicles": "node --test scripts/vehicles.test.mjs",
     "test:auth:browser": "playwright test tests/auth.spec.ts",
     "test:auth:live": "playwright test tests/auth-live.spec.ts",
     "typecheck": "tsc --noEmit",

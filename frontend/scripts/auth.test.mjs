@@ -179,7 +179,7 @@ test("validation errors map known fields without echoing submitted values", asyn
   );
   await assert.rejects(api.register(registration), (error) => {
     assert.deepEqual(error.fields, {
-      phone: "Enter a valid phone number without an extension.",
+      phone: "Enter a phone number with the correct number of digits.",
     });
     assert.ok(!error.message.includes("secret"));
     return true;
@@ -231,13 +231,13 @@ test("signup validation covers required fields, consent, names, phone and Unicod
   assert.deepEqual(
     validateAuthInput(
       "signup",
-      { ...registration, password: "🔐".repeat(15) },
+      { ...registration, password: "🔐".repeat(8) },
       true,
     ),
     {},
   );
   assert.ok(
-    validateAuthInput("signup", { ...registration, password: "short" }, true)
+    validateAuthInput("signup", { ...registration, password: "1234567" }, true)
       .password,
   );
   assert.ok(

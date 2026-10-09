@@ -26,7 +26,7 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:3001/v1
 
 Use `.env.development.local` for local development (configured locally), or copy `.env.example` to that file on another machine. Start the backend on port 3001 using its README, then start this frontend on port 3000. Open **localhost** for both apps: mixing localhost and 127.0.0.1 breaks the same-site cookie flow.
 
-- Signup sends names, email, phone, and the unchanged password. The backend validates/normalizes inputs; new passwords require 15–128 Unicode characters. After a generic accepted response, the frontend automatically calls the separate login endpoint with the entered credentials, confirms the session through `/me`, and returns home. Acceptance alone never counts as authentication or promises email verification. If automatic login fails, the entered email/password remain available for retrying login without registering again.
+- Signup sends names, email, phone, and the unchanged password. The backend checks phone number length and structure before normalizing it; new passwords require 8–128 Unicode characters. After a generic accepted response, the frontend automatically calls the separate login endpoint with the entered credentials, confirms the session through `/me`, and returns home. Acceptance alone never counts as authentication or promises email verification. If automatic login fails, the entered email/password remain available for retrying login without registering again.
 - Login, session restore (`GET /v1/me`), and logout use `credentials: 'include'`. Every auth POST sends JSON and `X-MFS-CSRF: 1`. Only the safe customer profile is held in memory; no tokens or profile are persisted in browser storage. Login also checks `/me` to confirm the HttpOnly cookie works.
 - The existing navigation shows Account/Log out when signed in. Refreshing or returning to a visible tab checks the session quietly; a background connection failure does not show a form error or count as a confirmed logout. Explicit signup/login/logout failures remain visible and retryable. Unverified customers remain allowed to sign in.
 - The existing terms checkbox is a client-side requirement only. The current API does not record legal-consent evidence; that policy remains unresolved.
@@ -54,24 +54,36 @@ Verification delivery, password recovery, and staff authentication are not part 
 
 The customer pages share a full width shell with a desktop navigation rail and a keyboard accessible mobile dialog. Open **Dashboard** from the signed-in Account menu. The existing landing/auth designs and their post-login destination are unchanged.
 
-| Route | Content |
-| --- | --- |
-| `/dashboard/` | Overview with a real account summary, workspace links, and the existing MFS WhatsApp contact as the next useful action. |
-| `/dashboard/vehicles/` | Informational empty layout; no vehicle records or vehicle API calls. |
-| `/dashboard/services/` | Informational empty layout; no hard-coded catalogue, availability, prices, or checkout. |
-| `/dashboard/requests/` | Informational empty layout; no request records, progress, or submission actions. |
-| `/dashboard/account/` | Read-only name, email, and phone from the existing authenticated `GET /v1/me` response. |
+| Route                  | Content                                                                                                                 |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `/dashboard/`          | Overview with a real account summary, workspace links, and the existing MFS WhatsApp contact as the next useful action. |
+| `/dashboard/vehicles/` | Customer-owned vehicles from the garage API, with add/edit forms and pagination. No deletion UI.                        |
+| `/dashboard/services/` | Informational empty layout; no hard-coded catalogue, availability, prices, or checkout.                                 |
+| `/dashboard/requests/` | Informational empty layout; no request records, progress, or submission actions.                                        |
+| `/dashboard/account/`  | Read-only name, email, and phone from the existing authenticated `GET /v1/me` response.                                 |
 
 The existing `AuthProvider` remains the only session store. Initial checks show a skeleton; a confirmed signed-out session redirects to `/auth/login/`. An initial connection failure offers retry without treating it as a logout. A failed background refresh keeps the last loaded profile with a visible notice, while a confirmed `401` removes it. Logout uses the existing credentialed, CSRF-protected API flow. No credentials or profile data are added to browser storage, and no verification requirement is introduced.
 
-These statically exported pages use a **client-side UI gate**, not server-side page access control. Only generic shell content is exported; account details arrive from the already protected customer API. Future vehicle/request/file APIs must enforce customer authorization and ownership on every request. Do not put private records into static pages or treat this shell as an authorization boundary.
+These statically exported pages use a **client-side UI gate**, not server-side page access control. Only generic shell content is exported; account and vehicle details arrive from the protected customer API. The garage API enforces customer ownership on every operation. Future request/file APIs must enforce authorization too. Do not put private records into static pages or treat this shell as an authorization boundary.
 
-Dashboard metadata uses `noindex, nofollow`. Account editing, staff pages, and all domain API integrations remain out of scope.
+Dashboard metadata uses `noindex, nofollow`. Account editing, staff pages, services, requests, uploads, and vehicle deletion remain out of scope.
+
+### Vehicle garage
+
+Vehicles use the existing `NEXT_PUBLIC_API_BASE_URL` and shared cookie/CSRF transport. The page calls `GET /vehicles?limit=20&offset=…`, reads fresh details through `GET /vehicles/:id` before editing, creates through `POST /vehicles`, and sends only changed fields through `PATCH /vehicles/:id`. POST/PATCH send JSON with `X-MFS-CSRF: 1`; all requests include credentials. No backend or CORS adjustment is required.
+
+The five confirmed categories are available. Category is the only required field; optional details can be cleared with `null`. Registration spacing and case are preserved as entered. Other text is trimmed/normalized, year is a four-digit integer, and usage/engine capacity remain text rather than invented business enums or units. Duplicate plates are not blocked by the frontend.
+
+Customers can add an optional **Vehicle name** such as Family car or Work van (up to 80 characters). The saved name is the card title, with make/model underneath. Unnamed vehicles fall back to make/model, then category. Naming, renaming, and clearing the name use the existing create/edit requests; no browser storage or new routes are introduced.
+
+Garage data and drafts stay in component memory and reset when the customer changes. Loading, genuine empty responses, field validation, unavailable services, expired sessions, and failed saves have separate states. A garage `401` hides vehicle records and asks the existing provider to restore the session. Failed refreshes retain previously loaded records with a notice; uncertain network writes are not automatically repeated.
 
 After building with the documented test API URL, run:
 
 ```sh
-npx playwright test tests/auth.spec.ts tests/dashboard.spec.ts
+npm run test:auth
+npm run test:vehicles
+npx playwright test tests/auth.spec.ts tests/dashboard.spec.ts tests/vehicles.spec.ts
 ```
 
-The dashboard browser tests mock only `/v1/me` and logout. They cover all routes, real profile projection, session failures, logout retries, keyboard navigation, mobile focus trapping, and narrow viewport overflow. They do not connect to the backend or create database fixtures.
+The dashboard and garage browser tests mock `/v1/me`, logout, and garage endpoints. They cover navigation, profile projection, session failures, logout retries, vehicle loading/add/edit, validation and API failures, pagination, keyboard focus, and narrow viewport overflow. They do not connect to the backend or create database fixtures.

@@ -35,8 +35,16 @@ async function mockCustomerApi(page: Page) {
     const request = route.request();
     const path = new URL(request.url()).pathname;
     state.calls.push(`${request.method()} ${path}`);
-    // No non-authentication endpoint exists in this slice.
-    expect(["/v1/me", "/v1/auth/logout"]).toContain(path);
+    expect(["/v1/me", "/v1/auth/logout", "/v1/vehicles"]).toContain(path);
+    if (path === "/v1/vehicles") {
+      expect(request.method()).toBe("GET");
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ items: [], total: 0, limit: 20, offset: 0 }),
+      });
+      return;
+    }
     if (path === "/v1/me") {
       expect(request.method()).toBe("GET");
       if (state.meDelay)
@@ -96,7 +104,7 @@ test("customer navigation reaches all five pages without inventing domain API da
     await expect(
       navigation.getByRole("link", { name: route.label, exact: true }),
     ).toHaveAttribute("aria-current", "page");
-    if (!["Overview", "Account"].includes(route.label)) {
+    if (["Services", "Requests"].includes(route.label)) {
       await expect(
         page.locator("main").getByText("Coming soon", { exact: true }),
       ).toBeVisible();
@@ -114,7 +122,11 @@ test("customer navigation reaches all five pages without inventing domain API da
       "noindex, nofollow",
     );
   }
-  expect(api.calls.every((call) => call === "GET /v1/me")).toBe(true);
+  expect(
+    api.calls.every((call) =>
+      ["GET /v1/me", "GET /v1/vehicles"].includes(call),
+    ),
+  ).toBe(true);
 });
 
 test("all dashboard routes send confirmed signed-out customers to the existing login page", async ({

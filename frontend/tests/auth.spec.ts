@@ -200,7 +200,7 @@ test("background restore failures stay quiet but signup field errors remain visi
     .getByRole("button", { name: "Create account", exact: true })
     .click();
   await expect(
-    page.getByText("Enter a valid phone number without an extension."),
+    page.getByText("Enter a phone number with the correct number of digits."),
   ).toBeVisible();
   await expect(page.getByLabel("Phone number")).toBeFocused();
   expect(api.requests.filter((request) => request.startsWith("POST"))).toEqual([

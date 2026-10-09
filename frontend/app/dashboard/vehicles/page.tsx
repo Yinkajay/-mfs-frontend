@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { DashboardEmptyPage } from "@/app/components/dashboard/dashboard-pages";
+import { VehiclesGarage } from "@/app/components/dashboard/vehicles-garage";
 
 export const metadata: Metadata = { title: "Vehicles" };
 
 export default function VehiclesPage() {
-  return <DashboardEmptyPage section="vehicles" />;
+  return <VehiclesGarage />;
 }

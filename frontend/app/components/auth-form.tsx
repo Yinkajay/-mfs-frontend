@@ -261,7 +261,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
             />
             {!isLogin && (
               <p id="password-help" className="mt-2 text-sm text-[#686d69]">
-                Use 15–128 characters.
+                Use 8–128 characters.
               </p>
             )}
             {fieldError("password")}
