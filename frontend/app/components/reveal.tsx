@@ -45,7 +45,13 @@ export function Reveal({ children, className = "", delay = 0 }: RevealProps) {
   );
 }
 
-export function TaglineReveal({ text }: { text: string }) {
+export function TaglineReveal({
+  text,
+  tone = "light",
+}: {
+  text: string;
+  tone?: "light" | "dark";
+}) {
   const wordRefs = useRef<Array<HTMLSpanElement | null>>([]);
   const words = text.split(" ");
 
@@ -79,7 +85,7 @@ export function TaglineReveal({ text }: { text: string }) {
             ref={(element) => {
               wordRefs.current[index] = element;
             }}
-            className="tagline-word"
+            className={`tagline-word ${tone === "dark" ? "tagline-word-dark" : ""}`}
             style={{ transitionDelay: `${Math.min(index * 35, 700)}ms` }}
           >
             {word}

@@ -3,7 +3,7 @@ import { FluidNav } from "@/app/components/fluid-nav";
 import { SiteFooter } from "@/app/components/site-footer";
 
 type SiteSubpageProps = {
-  currentPage: "about" | "contact";
+  currentPage: "about" | "contact" | "services";
   children: ReactNode;
 };
 

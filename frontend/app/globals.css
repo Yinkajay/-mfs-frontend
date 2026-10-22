@@ -163,6 +163,14 @@ summary {
   color: #ffffff;
 }
 
+.tagline-word-dark {
+  color: rgba(24, 24, 24, 0.3);
+}
+
+.tagline-word-dark.tagline-word-visible {
+  color: #181818;
+}
+
 .faq-item:hover {
   border-color: rgba(255, 79, 61, 0.35);
 }
@@ -222,5 +230,9 @@ summary::-webkit-details-marker {
 
   .tagline-word {
     color: #ffffff;
+  }
+
+  .tagline-word-dark {
+    color: #181818;
   }
 }

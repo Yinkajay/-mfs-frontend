@@ -136,9 +136,9 @@ export function HeroCarousel() {
 
       <div aria-hidden="true" className="absolute inset-0 bg-black/50" />
 
-      <div className="relative z-10 mx-auto flex min-h-[720px] max-w-7xl items-end px-6 pb-24 pt-40 md:min-h-[760px] md:px-12 md:pb-16 lg:min-h-[800px] lg:px-16">
+      <div className="relative z-10 mx-auto flex min-h-[720px] max-w-7xl items-end px-6 pb-12 pt-40 sm:pb-24 md:min-h-[760px] md:px-12 md:pb-16 lg:min-h-[800px] lg:px-16">
         <div className="hero-copy-enter max-w-[680px]">
-          <h1 className="photo-hero-heading text-balance text-5xl font-semibold tracking-tight md:text-6xl lg:text-7xl">
+          <h1 className="photo-hero-heading text-balance text-4xl font-semibold tracking-tight min-[375px]:text-5xl md:text-6xl lg:text-7xl">
             Vehicle paperwork,
             <br />
             made painless.

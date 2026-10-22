@@ -8,14 +8,14 @@ import { useAuth } from "@/app/components/auth-provider";
 import { WHATSAPP_REGISTRATION_URL } from "@/app/lib/contact";
 
 const links = [
-  { label: "Services", href: "/#services" },
+  { label: "Services", href: "/services" },
   { label: "How it works", href: "/#process" },
   { label: "About us", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];
 
 type FluidNavProps = {
-  currentPage?: "home" | "about" | "contact";
+  currentPage?: "home" | "about" | "contact" | "services";
 };
 
 export function FluidNav({ currentPage = "home" }: FluidNavProps) {
@@ -81,7 +81,7 @@ export function FluidNav({ currentPage = "home" }: FluidNavProps) {
             onClick={() => setOpen(false)}
           >
             <BrandLogo
-              className={`h-10 w-auto transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${overHero ? "brightness-0 invert" : ""}`}
+              className="h-10 w-auto transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]"
               preload
             />
           </Link>
