@@ -78,7 +78,7 @@ async function fillLogin(page: Page) {
     .fill("test-only password phrase");
 }
 
-test("signup validates, logs in through the separate endpoint, and returns home automatically", async ({
+test("signup validates, logs in through the separate endpoint, and opens the dashboard", async ({
   page,
 }) => {
   const api = await mockApi(page);
@@ -103,9 +103,9 @@ test("signup validates, logs in through the separate endpoint, and returns home 
   await page
     .getByRole("button", { name: "Create account", exact: true })
     .click();
-  await expect(page).toHaveURL("http://localhost:3002/");
+  await expect(page).toHaveURL("http://localhost:3002/dashboard/");
   await expect(
-    page.getByRole("button", { name: "Account", exact: true }),
+    page.getByRole("heading", { name: "Let’s sort your vehicle paperwork." }),
   ).toBeVisible();
   expect(api.requests.filter((request) => request.startsWith("POST"))).toEqual([
     "POST /v1/auth/register",
@@ -113,7 +113,7 @@ test("signup validates, logs in through the separate endpoint, and returns home 
   ]);
 });
 
-test("login loads, restores on reload, keeps tokens out of storage, and logs out from the nav", async ({
+test("login opens the dashboard, restores on reload, keeps tokens out of storage, and logs out", async ({
   page,
 }) => {
   const api = await mockApi(page);
@@ -124,26 +124,22 @@ test("login loads, restores on reload, keeps tokens out of storage, and logs out
   await expect(
     page.getByRole("button", { name: "Logging in…" }),
   ).toBeDisabled();
-  await expect(page).toHaveURL("http://localhost:3002/");
+  await expect(page).toHaveURL("http://localhost:3002/dashboard/");
   await page.reload();
-  await page.getByRole("button", { name: "Account", exact: true }).hover();
-  await expect(page.getByText("Amaka", { exact: true }).first()).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Let’s sort your vehicle paperwork." }),
+  ).toBeVisible();
   expect(
     await page.evaluate(() => ({
       local: Object.keys(localStorage),
       session: Object.keys(sessionStorage),
     })),
   ).toEqual({ local: [], session: [] });
-  await page
-    .getByRole("button", { name: "Log out", exact: true })
-    .first()
-    .click();
-  await expect(
-    page.getByRole("button", { name: "Sign in", exact: true }),
-  ).toBeVisible();
+  await page.getByRole("button", { name: "Log out", exact: true }).click();
+  await expect(page).toHaveURL("http://localhost:3002/auth/login/");
   await page.reload();
   await expect(
-    page.getByRole("button", { name: "Sign in", exact: true }),
+    page.getByRole("heading", { name: "Log in to your account." }),
   ).toBeVisible();
   expect(api.requests).toContain("POST /v1/auth/logout");
 });
@@ -238,7 +234,7 @@ test("accepted signup with failed auto-login keeps credentials and retries only 
   await expect(page).toHaveURL("http://localhost:3002/auth/signup/");
   api.loginFailure = 0;
   await page.getByRole("button", { name: "Log in", exact: true }).click();
-  await expect(page).toHaveURL("http://localhost:3002/");
+  await expect(page).toHaveURL("http://localhost:3002/dashboard/");
   expect(api.requests.filter((request) => request.startsWith("POST"))).toEqual([
     "POST /v1/auth/register",
     "POST /v1/auth/login",

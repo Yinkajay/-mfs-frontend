@@ -127,7 +127,9 @@ test("real signup automatically logs in, restores its HttpOnly session and revok
     const accepted = await acceptedResponse;
     expect(accepted.status()).toBe(202);
     expect(Boolean(await accepted.headerValue("set-cookie"))).toBe(false);
-    await expect(page).toHaveURL("http://localhost:3002/", { timeout: 45000 });
+    await expect(page).toHaveURL("http://localhost:3002/dashboard/", {
+      timeout: 45000,
+    });
     expect(posts).toEqual(["/v1/auth/register", "/v1/auth/login"]);
     const cookies = await context.cookies("http://localhost:3003");
     expect(
@@ -148,11 +150,8 @@ test("real signup automatically logs in, restores its HttpOnly session and revok
       ),
     ).toBe(0);
     await page.reload();
-    await page.getByRole("button", { name: "Account", exact: true }).hover();
     await expect(
-      page
-        .locator("#account-navigation")
-        .getByText("Frontend", { exact: true }),
+      page.getByRole("heading", { name: "Let’s sort your vehicle paperwork." }),
     ).toBeVisible();
     const profile = await context.request.get("http://localhost:3003/v1/me");
     expect(profile.status()).toBe(200);
@@ -162,13 +161,8 @@ test("real signup automatically logs in, restores its HttpOnly session and revok
     );
     expect(user.phone).toBe("+2349060004617");
     expect(!("passwordHash" in user) && !("token" in user)).toBe(true);
-    await page
-      .getByRole("button", { name: "Log out", exact: true })
-      .first()
-      .click();
-    await expect(
-      page.getByRole("button", { name: "Sign in", exact: true }),
-    ).toBeVisible();
+    await page.getByRole("button", { name: "Log out", exact: true }).click();
+    await expect(page).toHaveURL("http://localhost:3002/auth/login/");
     expect(
       (await context.request.get("http://localhost:3003/v1/me")).status(),
     ).toBe(401);
@@ -180,7 +174,7 @@ test("real signup automatically logs in, restores its HttpOnly session and revok
     expect(revoked).toBe(1);
     await page.reload();
     await expect(
-      page.getByRole("button", { name: "Sign in", exact: true }),
+      page.getByRole("heading", { name: "Log in to your account." }),
     ).toBeVisible();
   } finally {
     if (api && api.exitCode === null) {

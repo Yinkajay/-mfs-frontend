@@ -71,7 +71,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
       }
       await auth.login({ email: input.email, password: input.password });
       form.reset();
-      router.replace("/");
+      router.replace("/dashboard");
     } catch (failure) {
       setError(authErrorMessage(failure));
       if (failure instanceof AuthApiError) showFields(form, failure.fields);
@@ -99,10 +99,10 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
           You’re signed in.
         </h1>
         <p className="mt-3 text-pretty text-sm text-[#686d69]">
-          {auth.user.firstName}, you can return to the MFS home page.
+          {auth.user.firstName}, you can continue to your dashboard.
         </p>
-        <Link href="/" className={buttonClassName}>
-          Back home
+        <Link href="/dashboard" className={buttonClassName}>
+          Go to dashboard
         </Link>
         <button
           type="button"
